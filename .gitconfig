@@ -1,0 +1,55 @@
+[core]
+    editor = nvim
+    pager = delta
+    quotepath = false
+[user]
+    email = liu.qihuan@outlook.com
+    name = alohaia
+    ; name = daisilia
+    ; email = erickonorlandop11811@gmail.com
+[http]
+    proxy = socks5://127.0.0.1:1089
+[https]
+    proxy = socks5://127.0.0.1:1089
+[ssh]
+    proxy = socks5://127.0.0.1:1089
+[init]
+    defaultBranch = main
+[color]
+    ui = 1
+[alias]
+    cm = commit
+    co = checkout
+    lg = log --all --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%Creset' --abbrev-commit --date=relative
+    st = status -sb
+    tags = tag -l
+    branches = branch -a
+    remotes = remote -v
+    last = log -1 HEAD
+    unstage = reset HEAD --
+[diff]
+    tool = nvimdiff
+
+
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    features = side-by-side line-numbers decorations
+    whitespace-error-style = 22 reverse
+[delta]
+    features = side-by-side line-numbers decorations
+    syntax-theme = Dracula
+    plus-style = syntax "#003800"
+    minus-style = syntax "#3f0001"
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none
+    hunk-header-decoration-style = cyan box ul
+[delta "line-numbers"]
+    line-numbers-left-style = cyan
+    line-numbers-right-style = cyan
+    line-numbers-minus-style = 124
+    line-numbers-plus-style = 28
+[pull]
+    rebase = false
