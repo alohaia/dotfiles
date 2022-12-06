@@ -11,8 +11,6 @@
     proxy = socks5://127.0.0.1:1089
 [https]
     proxy = socks5://127.0.0.1:1089
-[ssh]
-    proxy = socks5://127.0.0.1:1089
 [init]
     defaultBranch = main
 [color]
