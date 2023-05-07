@@ -8,9 +8,9 @@
     ; name = daisilia
     ; email = erickonorlandop11811@gmail.com
 [http]
-    proxy = socks5://127.0.0.1:1089
+	proxy = socks5://127.0.0.1:1089
 [https]
-    proxy = socks5://127.0.0.1:1089
+	proxy = socks5://127.0.0.1:1089
 [init]
     defaultBranch = main
 [color]
@@ -51,3 +51,8 @@
     line-numbers-plus-style = 28
 [pull]
     rebase = false
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
