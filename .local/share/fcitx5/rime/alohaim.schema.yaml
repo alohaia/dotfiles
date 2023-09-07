@@ -1,0 +1,279 @@
+schema:
+  schema_id: alohaim
+  name: alohaim
+  version: '0.1'
+  dependencies:
+    - stroke
+    - easy_en
+
+# engine:                    # 輸入引擎設定，即掛接組件的「處方」
+#   processors:              # 一、這批組件處理各類按鍵消息
+#     - ascii_composer       # ※ 處理西文模式及中西文切換
+#     - recognizer           # ※ 與 matcher 搭配，處理符合特定規則的輸入碼，如網址、反查等
+#     - key_binder           # ※ 在特定條件下將按鍵綁定到其他按鍵，如重定義逗號、句號爲候選翻頁鍵
+#     - speller              # ※ 拼寫處理器，接受字符按鍵，編輯輸入碼
+#     - punctuator           # ※ 句讀處理器，將單個字符按鍵直接映射爲文字符號
+#     - selector             # ※ 選字處理器，處理數字選字鍵、上、下候選定位、換頁鍵
+#     - navigator            # ※ 處理輸入欄內的光標移動鍵
+#     - express_editor       # ※ 編輯器，處理空格、回車上屏、回退鍵等
+#   segmentors:              # 二、這批組件識別不同內容類型，將輸入碼分段
+#     - ascii_segmentor      # ※ 標識西文段落
+#     - matcher              # ※ 標識符合特定規則的段落，如網址、反查等
+#     - abc_segmentor        # ※ 標識常規的文字段落
+#     - punct_segmentor      # ※ 標識句讀段落
+#     - fallback_segmentor   # ※ 標識其他未標識段落
+#   translators:             # 三、這批組件翻譯特定類型的編碼段爲一組候選文字
+#     - echo_translator      # ※ 沒有其他候選字時，回顯輸入碼
+#     - punct_translator     # ※ 轉換標點符號
+#     - script_translator    # ※ 腳本翻譯器，用於拼音等基於音節表的輸入方案
+#     - reverse_lookup_translator  # ※ 反查翻譯器，用另一種編碼方案查碼
+#   filters:                 # 四、這批組件過濾翻譯的結果
+#     - simplifier           # ※ 繁簡轉換
+#     - uniquifier           # ※ 過濾重複的候選字，有可能來自繁簡轉換
+#
+#- fluid_editor      # ※ 句式編輯器，用於以空格斷詞、回車上屏的【注音】、【語句流】等輸入方案，替換 express_editor，也可以寫作 fluency_editor
+#- chord_composer    # ※ 和絃作曲家或曰並擊處理器，用於【宮保拼音】等多鍵並擊的輸入方案
+#- table_translator  # ※ 碼表翻譯器，用於倉頡、五筆等基於碼表的輸入方案，替換 script_translator
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@stroke
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - table_translator@custom
+    - punct_translator
+    - script_translator
+    - reverse_lookup_translator
+    - table_translator@easy_en
+    - lua_translator@date
+    - lua_translator@calculator # 计算器：二元运算，coco 开头，如 coco56*34 coco24/1024
+  filters:
+    - simplifier
+    - simplifier@emoji_suggestion
+    # 不使用连续输入增强，需要可以切换到  easy_en 输入法
+    # - lua_filter@easy_en_enhance_filter
+    - uniquifier
+
+custom:
+  dictionary: ''
+  user_dict: custom_phrase
+  db_class: tabledb
+  enable_user_dict: true # 用户词典与自动调频
+  enable_completion: true # 自动补全
+  enable_sentence: false # 整句输入
+  spelling_hints: 1 # 输入提示
+  initial_quality: 1
+
+easy_en:
+  __include: easy_en.schema:/translator
+  enable_completion: true
+  enable_sentence: false
+  initial_quality: -1
+  split_sentence: false
+  # use_wordninja_rs: true
+  # wordninja_rs_path: "/usr/lib/wordninja"
+  # use_wordninja_rs_lua_module: true
+  # wordninja_rs_lua_module_path: "/usr/lib/lua/5.4/wordninja.so"
+
+emoji_suggestion:
+  opencc_config: emoji.json
+  option_name: emoji_suggestion
+  tips: all
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA
+  auto_select: true
+  delimiter: " '"
+  algebra:
+    - erase/^xx$/
+    - derive/^([jqxy])u$/$1ü/
+    - derive/^([aoe])([ioun])$/$1$1$2/
+    - xform/^([aoe])(ng)?$/$1$1$2/
+    - xform/iu$/M/
+    - xform/[iu]a$/V/
+    - xform/ui$/V/
+    - xform/[uv]an$/B/
+    - xform/(ue|ve|ui)$/F/
+    - xform/uai$/Y/
+    - xform/ing$/D/
+    - xform/^sh/V/
+    - xform/^ch/I/
+    - xform/^zh/U/
+    - xform/uo$/O/
+    - xform/[uv]n$/T/
+    - xform/i?ong$/C/
+    - xform/[iu]ang$/H/
+    - xform/en$/$1L/
+    - xform/eng$/$1X/
+    - xform/ang$/$1Q/
+    - xform/ian$/K/
+    - xform/an$/$1Z/
+    - xform/iao$/R/
+    - xform/ao$/$1S/
+    - xform/ai$/$1P/
+    - xform/ei$/$1J/
+    - xform/ie$/N/
+    - xform/ou$/$1W/
+    - xform/in$/G/
+    - xform/[A-Z]/\L$0/
+    #- abbrev/^(.).+$/$1/
+
+    # - xform/^([aoe])(ng)?$/$1$1$2/
+    # - xform/^(a[ion]|e[rn]|ou)$/$1"/       # " 防止之后的替换影响
+
+    # # g
+    # # n
+    # # i
+    # # o
+    # # 其他
+
+    # - xform/"//
+
+translator:
+  dictionary: alohaim
+  prism: alohaim
+  enable_sentence: true
+  enable_user_dict: true
+  initial_quality: 1
+  preedit_format:
+    - xform/(\w)n/$1ie/
+    - xform/([bpmnljqxy])g/$1in/
+    - xform/([dtnlgkhvuirzcs])o/$1uo/
+    - xform/([dtgkhvuirzcs])v/$1ui/
+    - xform/([gkhvuirzcs])v/$1ua/
+    - xform/(\w)v/$1ia/
+    # s c z h
+    - xform/([jqx])c/$1iong/
+    - xform/(\w)z/$1an/
+    - xform/(\w)s/$1ao/
+    - xform/([jqxnl])h/$1iang/
+    - xform/(\w)h/$1uang/
+    - "xform/(^|[ '])v/$1sh/"
+    - "xform/(^|[ '])i/$1ch/"
+    - "xform/(^|[ '])u/$1zh/"
+    - xform/(\w)x/$1eng/
+    - xform/(\w)m/$1iu/
+    - xform/([dtnlgkhjqxyvuirzcs])b/$1uan/
+    - xform/(\w)f/$1ve/
+    - xform/([gkhvuirzcs])y/$1uai/
+    - xform/(\w)d/$1ing/
+    - xform/(\w)t/$1un/
+    - xform/(\w)c/$1ong/
+    - xform/(\w)l/$1en/
+    - xform/(\w)q/$1ang/
+    - xform/(\w)p/$1ai/
+    - xform/(\w)j/$1ei/
+    - xform/(\w)r/$1iao/
+    - xform/(\w)w/$1ou/
+    - xform/(\w)k/$1ian/
+
+    - xform/([aoe])\1(\w)/$1$2/
+    - xform/([jqxy])v/$1u/
+    - xform/([nl])v/$1ü/
+
+punctuator:
+  __include: punctuation.yaml:/
+
+key_binder:
+  bindings:
+    __patch:
+      - key_bindings.yaml:/emacs_editing
+      - key_bindings.yaml:/move_by_word_with_tab
+      - key_bindings.yaml:/paging_with_minus_equal
+      # - key_bindings.yaml:/paging_with_comma_period
+      - key_bindings.yaml:/numbered_mode_switch
+      - key_bindings.yaml:/windows_compatible_mode_switch
+
+recognizer:
+  patterns:
+    # stroke: "\\*[hspnz]*'?$"
+    uppercase: '' # easy_en
+    # email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+    reverse_lookup: "\\*[a-z]*'?$"
+    calculator: "^coco.*$" # 计算器
+    # uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"
+    # url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+
+reverse_lookup:
+  # tag: wubi
+  dictionary: wubi86_jidian
+  # enable_completion: true
+  # overwrite_comment: false
+  prefix: "*"
+  suffix: "'"
+  tips: "〔五笔反查〕"
+  comment_format:
+    - xform/^([aoe])(ng)?$/\U$1\U$1\U$2/
+    - xform/^a([ion])$/A\U$1/
+    - xform/^e([rn])$/E\U$1/
+    - xform/^o([u])$/O\U$1/
+
+    - xform/^zh/U/
+    - xform/^sh/V/
+    - xform/^ch/I/
+
+    - xform/[iu]ang$/H/
+    - xform/ang$/Q/
+    - xform/uan$/B/
+    - xform/ian$/K/
+    - xform/an$/Z/
+    - xform/uai$/Y/
+    - xform/ai$/P/
+    - xform/iao$/R/
+    - xform/ao$/S/
+    - xform/eng$/X/
+    - xform/en$/L/
+    - xform/i?ong$/C/
+    - xform/un$/T/
+    - xform/in$/G/
+    - xform/ei$/J/
+    - xform/ie$/N/
+    - xform/ou$/W/
+    - xform/uo$/O/
+    - xform/iu$/M/
+    - xform/[iu]a$/V/
+    - xform/ing$/D/
+    - xform/(ue|ve|ui)$/F/
+
+    - xform/[A-Z]/\L$0/
+
+switcher:
+  caption: 〔方案选单〕
+  hotkeys:
+    - Control+grave
+    - Control+Shift+grave
+    - Control+F4
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: ["中文", "西文"]
+  - name: full_shape
+    states: ["半角", "全角"]
+  - name: ascii_punct
+    states: ["，。", ",."]
+  - name: emoji_suggestion
+    reset: 1
+    states: [ "XD", "😆" ]
+  # - name: simplification
+  #   states: ["繁体", "简化字"]
+  # - name: mohuyin
+  #   states: ["on", "off"]
+  # - name: geek
+  #   states: [ "abc", "αβγ" ]
+
+menu:
+    page_size: 4

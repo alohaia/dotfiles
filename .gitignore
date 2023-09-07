@@ -1,0 +1,16 @@
+*
+!.gitignore
+!.gitconfig
+
+!.config/
+.config/*
+!.config/nvim/
+!.config/kitty/
+!.config/kitty/*
+
+!.local/share/fcitx5/rime/alohaim.schema.yaml
+
+!.ssh/
+.ssh/*
+!.ssh/config
+.Rproj.user
