@@ -104,7 +104,6 @@ speller:
     - xform/^([aoe])(ng)?$/$1$1$2/
     - xform/iu$/M/
     - xform/[iu]a$/V/
-    - xform/ui$/V/
     - xform/[uv]an$/B/
     - xform/(ue|ve|ui)$/F/
     - xform/uai$/Y/
@@ -116,31 +115,19 @@ speller:
     - xform/[uv]n$/T/
     - xform/i?ong$/C/
     - xform/[iu]ang$/H/
-    - xform/en$/$1L/
-    - xform/eng$/$1X/
-    - xform/ang$/$1Q/
+    - xform/(.)en$/$1L/
+    - xform/(.)eng$/$1X/
+    - xform/(.)ang$/$1Q/
     - xform/ian$/K/
-    - xform/an$/$1Z/
+    - xform/(.)an$/$1Z/
     - xform/iao$/R/
-    - xform/ao$/$1S/
-    - xform/ai$/$1P/
-    - xform/ei$/$1J/
+    - xform/(.)ao$/$1S/
+    - xform/(.)ai$/$1P/
+    - xform/(.)ei$/$1J/
     - xform/ie$/N/
-    - xform/ou$/$1W/
+    - xform/(.)ou$/$1W/
     - xform/in$/G/
     - xform/[A-Z]/\L$0/
-    #- abbrev/^(.).+$/$1/
-
-    # - xform/^([aoe])(ng)?$/$1$1$2/
-    # - xform/^(a[ion]|e[rn]|ou)$/$1"/       # " 防止之后的替换影响
-
-    # # g
-    # # n
-    # # i
-    # # o
-    # # 其他
-
-    # - xform/"//
 
 translator:
   dictionary: alohaim
@@ -149,10 +136,9 @@ translator:
   enable_user_dict: true
   initial_quality: 1
   preedit_format:
-    - xform/(\w)n/$1ie/
+    - xform/([^ea ])n/$1ie/
     - xform/([bpmnljqxy])g/$1in/
     - xform/([dtnlgkhvuirzcs])o/$1uo/
-    - xform/([dtgkhvuirzcs])v/$1ui/
     - xform/([gkhvuirzcs])v/$1ua/
     - xform/(\w)v/$1ia/
     # s c z h
@@ -161,12 +147,11 @@ translator:
     - xform/(\w)s/$1ao/
     - xform/([jqxnl])h/$1iang/
     - xform/(\w)h/$1uang/
-    - "xform/(^|[ '])v/$1sh/"
-    - "xform/(^|[ '])i/$1ch/"
-    - "xform/(^|[ '])u/$1zh/"
+    # ...
     - xform/(\w)x/$1eng/
     - xform/(\w)m/$1iu/
     - xform/([dtnlgkhjqxyvuirzcs])b/$1uan/
+    - xform/([dtgkhvuirzcs])f/$1ui/
     - xform/(\w)f/$1ve/
     - xform/([gkhvuirzcs])y/$1uai/
     - xform/(\w)d/$1ing/
@@ -179,6 +164,10 @@ translator:
     - xform/(\w)r/$1iao/
     - xform/(\w)w/$1ou/
     - xform/(\w)k/$1ian/
+    # sh ch zh
+    - "xform/(^|[ '])v/$1sh/"
+    - "xform/(^|[ '])i/$1ch/"
+    - "xform/(^|[ '])u/$1zh/"
 
     - xform/([aoe])\1(\w)/$1$2/
     - xform/([jqxy])v/$1u/
@@ -215,40 +204,40 @@ reverse_lookup:
   prefix: "*"
   suffix: "'"
   tips: "〔五笔反查〕"
-  comment_format:
-    - xform/^([aoe])(ng)?$/\U$1\U$1\U$2/
-    - xform/^a([ion])$/A\U$1/
-    - xform/^e([rn])$/E\U$1/
-    - xform/^o([u])$/O\U$1/
+  # comment_format:
+  #   - xform/^([aoe])(ng)?$/\U$1\U$1\U$2/
+  #   - xform/^a([ion])$/A\U$1/
+  #   - xform/^e([rn])$/E\U$1/
+  #   - xform/^o([u])$/O\U$1/
 
-    - xform/^zh/U/
-    - xform/^sh/V/
-    - xform/^ch/I/
+  #   - xform/^zh/U/
+  #   - xform/^sh/V/
+  #   - xform/^ch/I/
 
-    - xform/[iu]ang$/H/
-    - xform/ang$/Q/
-    - xform/uan$/B/
-    - xform/ian$/K/
-    - xform/an$/Z/
-    - xform/uai$/Y/
-    - xform/ai$/P/
-    - xform/iao$/R/
-    - xform/ao$/S/
-    - xform/eng$/X/
-    - xform/en$/L/
-    - xform/i?ong$/C/
-    - xform/un$/T/
-    - xform/in$/G/
-    - xform/ei$/J/
-    - xform/ie$/N/
-    - xform/ou$/W/
-    - xform/uo$/O/
-    - xform/iu$/M/
-    - xform/[iu]a$/V/
-    - xform/ing$/D/
-    - xform/(ue|ve|ui)$/F/
+  #   - xform/[iu]ang$/H/
+  #   - xform/ang$/Q/
+  #   - xform/uan$/B/
+  #   - xform/ian$/K/
+  #   - xform/an$/Z/
+  #   - xform/uai$/Y/
+  #   - xform/ai$/P/
+  #   - xform/iao$/R/
+  #   - xform/ao$/S/
+  #   - xform/eng$/X/
+  #   - xform/en$/L/
+  #   - xform/i?ong$/C/
+  #   - xform/un$/T/
+  #   - xform/in$/G/
+  #   - xform/ei$/J/
+  #   - xform/ie$/N/
+  #   - xform/ou$/W/
+  #   - xform/uo$/O/
+  #   - xform/iu$/M/
+  #   - xform/[iu]a$/V/
+  #   - xform/ing$/D/
+  #   - xform/(ue|ve|ui)$/F/
 
-    - xform/[A-Z]/\L$0/
+  #   - xform/[A-Z]/\L$0/
 
 switcher:
   caption: 〔方案选单〕
